@@ -30,7 +30,7 @@ namespace WallyPOS.Classes.Model
                     SubTotal += products.sPrice;
                 }
                 OnlyTaxes = SubTotal * taxesMult;
-                TotalBalance += OnlyTaxes;
+                TotalBalance = SubTotal + OnlyTaxes;
                 OnPropertyChanged("ProductsInOrder");
             }
         }

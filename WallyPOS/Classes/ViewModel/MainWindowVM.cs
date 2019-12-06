@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using WallyPOS.Classes.DataLayer;
@@ -24,6 +25,18 @@ namespace WallyPOS.Classes.ViewModel
                 OnPropertyChanged("ShoppingCart");
             }
         }
+
+        private ObservableCollection<Item> _filteredProducts;
+        public ObservableCollection<Item> FilteredProducts
+        {
+            get { return _filteredProducts; }
+            set
+            {
+                _filteredProducts = value;
+                OnPropertyChanged("FilteredProducts");
+            }
+        }
+
 
         private ObservableCollection<CustomerOrder> _filteredOrders;
         public ObservableCollection<CustomerOrder> FilteredOrders
@@ -99,8 +112,13 @@ namespace WallyPOS.Classes.ViewModel
             return alreadyExistsIndex;
         }
 
-        public void CreateNewOrder(Customer customer, Branch branch)
-        {           
+        public bool CreateNewOrder(Customer customer, Branch branch)
+        {
+            if(ShoppingCart.Count == 0)
+            {
+                return false;
+            }
+
             WallyDAL dal = new WallyDAL();
 
             Order newOrder = new Order(customer.CustomerId, branch.BranchId);
@@ -115,13 +133,31 @@ namespace WallyPOS.Classes.ViewModel
             CustomerOrder justCreated = dal.GetCustomerOrder(orderID);
             justCreated.order.ProductsInOrder = newOrder.ProductsInOrder;
             receipt.CreateReceipt(justCreated);
+
+            // Clear Shopping Cart
+            ShoppingCart = null;
+            return true;
         }
+
+        public void FilterProducts(string productName)
+        {
+            WallyDAL dal = new WallyDAL();
+            FilteredProducts = new ObservableCollection<Item>(dal.GetProductsByName(productName));
+        }
+
 
         //------------------------------------------ ORDER LOOKUP STUFF--------------------------------------------//
         public void FilterCustomersOrder(string firstName, string lastName, string phoneNum, string branchName)
         {
             WallyDAL dal = new WallyDAL();
             FilteredOrders = new ObservableCollection<CustomerOrder>(dal.GetOrders(firstName, lastName, phoneNum, branchName));
+        }
+
+        public void GetOneCustomerOrder(int orderId)
+        {
+            WallyDAL dal = new WallyDAL();
+            FilteredOrders = new ObservableCollection<CustomerOrder>();
+            FilteredOrders.Add( dal.GetCustomerOrder(orderId));
         }
 
         public void GetProductsFromOrder(int orderId)
@@ -136,5 +172,6 @@ namespace WallyPOS.Classes.ViewModel
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
+
     }
 }

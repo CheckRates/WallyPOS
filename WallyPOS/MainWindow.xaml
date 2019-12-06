@@ -43,8 +43,10 @@
                     <!--Products Stuff -->
                     <Label Content="Products" FontWeight="DemiBold" Foreground="Blue" FontStyle="Italic" HorizontalAlignment="Left"  VerticalAlignment="Top" MinHeight="25" Grid.Row="1"/>
                     <Label Content="Search :" HorizontalAlignment="Left" VerticalAlignment="Bottom"  Grid.Row="1"/>
-                    <TextBox HorizontalAlignment="Left" VerticalAlignment="Bottom" TextWrapping="NoWrap" Grid.ColumnSpan="2"  Grid.Row="1" Grid.Column="1" MinWidth="350" Margin="0,0,0,3.5"/>
-                    <DataGrid Name="ProductsList" ItemsSource="{ Binding Products }" IsReadOnly="true" 
+                    <TextBox Name="ProductNameFilter" HorizontalAlignment="Left" VerticalAlignment="Bottom" TextWrapping="NoWrap" Grid.ColumnSpan="2"  Grid.Row="1" Grid.Column="1" MinWidth="350" Margin="0,0,0,3.5"/>
+                    <Button Content="Search" Click="SearchProduct_Click" Grid.Column="2" HorizontalAlignment="Right" Grid.Row="1" VerticalAlignment="Bottom" Width="75" Margin="0,0,0,3.5"/>
+                    
+                    <DataGrid Name="ProductsList" ItemsSource="{ Binding FilteredProducts }" IsReadOnly="true" 
                               Background="LightGray" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3"/>
 
                     <!--Error Message-->
@@ -72,6 +74,7 @@
 
                     <!--Remove from Shopping Cart-->
                     <Button Content="Remove" Click="CartRemove_Click" HorizontalAlignment="Left" VerticalAlignment="Top"  Width="105" MinHeight="20" Grid.Column="4" Grid.Row="3" Margin="0,3.5,0,0"/>
+                    
                 </Grid>
             </TabItem>
 
@@ -94,7 +97,7 @@
                         <RowDefinition />
                         <RowDefinition Height="20"/>
                     </Grid.RowDefinitions>
-                    
+
                     <!--Filters-->
                     <Label Content="Filters" FontWeight="DemiBold" Foreground="Blue" FontStyle="Italic" Grid.Row="1" Grid.Column="1"/>
 

@@ -5,6 +5,8 @@ using WallyPOS.Classes.Model;
 using WallyPOS.Classes.ViewModel;
 using System;
 using System.Text.RegularExpressions;
+using System.Drawing;
+using System.Windows.Media;
 
 namespace WallyPOS
 {
@@ -24,6 +26,7 @@ namespace WallyPOS
 
             var tempVM = (MainWindowVM)this.DataContext;
             tempVM.FilterCustomersOrder("", "", "", "");
+            tempVM.FilterProducts("");
         }
 
         private void CustomerLookUp_Click(object sender, RoutedEventArgs e)
@@ -102,25 +105,75 @@ namespace WallyPOS
             tempVM.RemoveProductOffCart(selectedCartItem);
         }
 
-        private void SetErrorMessage(string message)
+        private void SetErrorMessage(string message, bool success = false)
         {
             ErrorMessage.Visibility = Visibility.Visible;
+            ErrorMessage.Background = new SolidColorBrush(Colors.Red);
+            if (success == true)
+            {
+                // Set the colour to Red if success...haha get it? (explanation: im colorblind)
+                ErrorMessage.Background = new SolidColorBrush(Colors.Green);
+            }
             ErrorMessage.Content = message;
         }
 
         private void CreateOrder_Click(object sender, RoutedEventArgs e)
         {
+            // Clear Error message
+            ErrorMessage.Visibility = Visibility.Hidden;
+
             // Get Branch
             Branch selectedBranch = (Branch)BranchSelection.SelectedItem;
 
+            // Input level validation
+            if (selectedBranch == null)
+            {
+                SetErrorMessage("Please select the branch of the order!");
+                return;
+            }
+            else if (foundCustomer == null)
+            {
+                SetErrorMessage("Please select the customer of the order!");
+                return;
+            }
+
             // Send to ViewModel layer and create order
             var tempVM = (MainWindowVM)this.DataContext;
-            tempVM.CreateNewOrder(foundCustomer, selectedBranch);
+            if (!tempVM.CreateNewOrder(foundCustomer, selectedBranch))
+            {
+                SetErrorMessage("Shopping cart cannot be blank!");
+                return;
+            }
+
+            SetErrorMessage("Order and Receipt Created!", true);
         }
 
         private void ApplyFilters_Click(object sender, RoutedEventArgs e)
         {
+            // Seacrh By Order Id 
+            int orderId = -1;
 
+            if (InOrderId.Text.ToString() != "" && onlyNumbers.IsMatch(InOrderId.Text))
+            {
+                orderId = Convert.ToInt32(InOrderId.Text);
+            }
+
+            // Get filters from textboxes 
+            string firstName = FirstNameFilter.Text.ToString();
+            string lastName = LastNameFilter.Text.ToString();
+            string phoneNum = PhoneNumFilter.Text.ToString();
+            string branchName = BranchFilter.Text.ToString();
+
+            // Access ViewModel
+            var tempVM = (MainWindowVM)this.DataContext;
+            if (orderId == -1)
+            {
+                tempVM.FilterCustomersOrder(firstName, lastName, phoneNum, branchName);
+            }
+            else
+            {
+                tempVM.GetOneCustomerOrder(orderId);
+            }
         }
 
         private void CustomerOrder_DoubleClick(object sender, RoutedEventArgs e)
@@ -133,6 +186,16 @@ namespace WallyPOS
             Window productsOrder = new ProductsOrder(orderId);
             productsOrder.Owner = this;
             productsOrder.ShowDialog();
+        }
+
+        private void SearchProduct_Click(object sender, RoutedEventArgs e)
+        {
+            // Get filters from textboxes 
+            string productName = ProductNameFilter.Text.ToString();
+
+            // Access ViewModel
+            var tempVM = (MainWindowVM)this.DataContext;
+            tempVM.FilterProducts(productName);
         }
     }
 }

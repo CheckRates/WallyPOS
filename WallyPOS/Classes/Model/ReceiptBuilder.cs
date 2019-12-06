@@ -23,7 +23,7 @@ namespace WallyPOS.Classes.Model
             {
                 file.WriteLine("*********************");
                 file.WriteLine("Wally’s World " + allOrderInfo.branch.BranchName);
-                file.WriteLine("On " + allOrderInfo.order.OrderDate.Date.ToString() + ", " + allOrderInfo.customer.FullName);
+                file.WriteLine("On " + allOrderInfo.order.OrderDate.ToString() + ", " + allOrderInfo.customer.FullName);
                 file.WriteLine("Order ID: " + allOrderInfo.order.OrderId);
 
                 foreach(var orderLine in allOrderInfo.order.ProductsInOrder)
@@ -33,7 +33,7 @@ namespace WallyPOS.Classes.Model
                 }
 
                 file.WriteLine("Subtotal = $ " + string.Format("{0:N2}", allOrderInfo.order.SubTotal));
-                file.WriteLine("HST (" + (int)(Order.taxesMult * 100) + ") = $" + string.Format("{0:N2}", allOrderInfo.order.OnlyTaxes));
+                file.WriteLine("HST (" + (int)(Order.taxesMult * 100) + "%) = $" + string.Format("{0:N2}", allOrderInfo.order.OnlyTaxes));
                 file.WriteLine("Sale Total = $" + string.Format("{0:N2}", allOrderInfo.order.TotalBalance));
                 file.WriteLine("Paid - Thank you!");
             }
