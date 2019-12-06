@@ -108,6 +108,7 @@
     <Compile Include="Classes\Model\CustomerOrder.cs" />
     <Compile Include="Classes\Model\Item.cs" />
     <Compile Include="Classes\Model\Order.cs" />
+    <Compile Include="Classes\Model\ReceiptBuilder.cs" />
     <Compile Include="Classes\Model\ShoppingCartItem.cs" />
     <Compile Include="Classes\ViewModel\CustomerLookupVM.cs" />
     <Compile Include="Classes\ViewModel\MainWindowVM.cs" />

@@ -1,5 +1,4 @@
-﻿
-using System.ComponentModel;
+﻿using System.ComponentModel;
 
 namespace WallyPOS.Classes.Model
 {
@@ -20,10 +19,21 @@ namespace WallyPOS.Classes.Model
             }
         }
 
+        private double _sPrice = 0; 
+        public double sPrice
+        {
+            get { return _sPrice; }
+            set
+            {
+                _sPrice = value;
+            }
+        }
+
         //----------METHODS----------//
         public ShoppingCartItem(Item selectedItem, int quantity) : base(selectedItem)
         {
             this.quantity = quantity;
+            sPrice = (UnitPrice * quantity);
         }
 
         public ShoppingCartItem()

@@ -153,7 +153,7 @@ namespace WallyPOS.Classes.DataLayer
                 myCommand.Parameters.AddWithValue("@CUSTOMERID", order.CustomerId);
                 myCommand.Parameters.AddWithValue("@BRANCHID", order.BranchId);
                 myCommand.Parameters.AddWithValue("@DATE", order.OrderDate);
-                myCommand.Parameters.AddWithValue("@PAYSTATUS", false); 
+                myCommand.Parameters.AddWithValue("@PAYSTATUS", true); 
 
                 myConn.Open();
 
@@ -187,10 +187,10 @@ namespace WallyPOS.Classes.DataLayer
                 foreach (var product in shoppingCart)
                 {
                     const string sqlStatement = @"  INSERT INTO orderline (OrderId, ItemId, Quantity)
-	                                            VALUES (@ORDERID, @ITEMID, @QUANTITY); 
-                                                UPDATE item                                
-                                                SET stock = (stock - @QUANTITY) 
-                                                WHERE ItemId = @ITEMID; ";
+	                                                VALUES (@ORDERID, @ITEMID, @QUANTITY); 
+                                                    UPDATE item                                
+                                                    SET stock = (stock - @QUANTITY) 
+                                                        WHERE ItemId = @ITEMID; ";
 
                     var myCommand = new MySqlCommand(sqlStatement, myConn);
 
@@ -206,7 +206,7 @@ namespace WallyPOS.Classes.DataLayer
         public List<CustomerOrder> GetOrders(string firstName, string lastName, string phoneNumber, string branchName)
         {
             const string sqlStatement = @" SELECT * 
-                                           FROM CustomerOrder
+                                                   FROM CustomerOrder
                                                    WHERE
 		                                           (FirstName LIKE CONCAT(@FNAME, '%') OR @FNAME= '') AND
                                                    (LastName LIKE CONCAT(@LNAME, '%') OR @LNAME  = '') AND  
@@ -234,6 +234,33 @@ namespace WallyPOS.Classes.DataLayer
                 var filteredCustomersOrders = DataTableToCustomerOrderList(dataTable);
 
                 return filteredCustomersOrders;
+            }
+        }
+
+        public CustomerOrder GetCustomerOrder(int orderId)
+        {
+            const string sqlStatement = @" SELECT * 
+                                                   FROM CustomerOrder
+                                                   WHERE
+		                                           OrderId = @ORDERID; ";
+
+            using (var myConn = new MySqlConnection(connectionString))
+            {
+                var myCommand = new MySqlCommand(sqlStatement, myConn);
+                myCommand.Parameters.AddWithValue("@ORDERID", orderId);
+
+                //For offline connection we will use  MySqlDataAdapter class.  
+                var myAdapter = new MySqlDataAdapter
+                {
+                    SelectCommand = myCommand
+                };
+
+                var dataTable = new DataTable();
+                myAdapter.Fill(dataTable);
+
+                var filteredCustomersOrders = DataTableToCustomerOrderList(dataTable);
+
+                return filteredCustomersOrders[0];
             }
         }
 
@@ -266,28 +293,31 @@ namespace WallyPOS.Classes.DataLayer
             }
         }
 
-        public void UpdateProductStock(int refundItemId,int newStockAmount)
+        public void RefundUpdateItemQuantity(int orderId, int refundedItemId, int ajustment)
         {
-            const string sqlStatement = @"  SELECT *
-                                            FROM Branch                                             
-                                            ORDER BY BranchName";
+            const string sqlStatement = @"  UPDATE orderline
+                                            SET 
+                                            quantity = (quantity - @AJUSTMENT)
+                                            WHERE OrderId = @ORDERID AND ItemId = @ITEMID;
+                                            UPDATE invoice
+                                            SET
+                                            PaymentAuthStatus = false;
+                                            WHERE OrderID = @ORDERID;
+                                            UPDATE item
+                                            SET
+                                            stock = (stock + @AJUSTMENT)
+                                            WHERE ItemId = @ITEMID; ";
 
             using (var myConn = new MySqlConnection(connectionString))
             {
                 var myCommand = new MySqlCommand(sqlStatement, myConn);
+                myCommand.Parameters.AddWithValue("@AJUSTMENT", ajustment);
+                myCommand.Parameters.AddWithValue("@ORDERID", orderId);
+                myCommand.Parameters.AddWithValue("@ITEMID", refundedItemId);
 
-                //For offline connection we will use  MySqlDataAdapter class.  
-                var myAdapter = new MySqlDataAdapter
-                {
-                    SelectCommand = myCommand
-                };
+                myConn.Open();
 
-                var dataTable = new DataTable();
-                myAdapter.Fill(dataTable);
-
-                var branches = DataTableToBranchList(dataTable);
-
-                return branches;
+                myCommand.ExecuteNonQuery();
             }
         }
 

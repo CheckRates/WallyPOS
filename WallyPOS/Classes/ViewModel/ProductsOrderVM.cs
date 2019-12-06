@@ -32,18 +32,19 @@ namespace WallyPOS.Classes.ViewModel
             ProductsInOrder = new ObservableCollection<ShoppingCartItem>(dal.GetProductsFromOrder(DisplayedOrder));
         }
 
-        public bool RefundItem(ShoppingCartItem refundedItem, int quantity)
+        public bool RefundItem(ShoppingCartItem refundedItem, int ajustement)
         {
+
             WallyDAL dal = new WallyDAL();
             bool wasItemRefunded = false;
 
-            if(quantity <= refundedItem.quantity)
+            if(ajustement <= refundedItem.quantity)
             {
-                refundedItem.quantity -= quantity;
-
+                dal.RefundUpdateItemQuantity(DisplayedOrder, refundedItem.ItemId, ajustement);
+                refundedItem.quantity -= ajustement;
+                OnPropertyChanged("ProductsInOrder");
                 wasItemRefunded = true;
             }
-
 
             return wasItemRefunded;
         }

@@ -100,15 +100,21 @@ namespace WallyPOS.Classes.ViewModel
         }
 
         public void CreateNewOrder(Customer customer, Branch branch)
-        {
+        {           
             WallyDAL dal = new WallyDAL();
 
             Order newOrder = new Order(customer.CustomerId, branch.BranchId);
             int orderID = dal.CreateNewOrder(newOrder);
 
             // Associate Order with Product with OrderLInes
-            var products = new List<ShoppingCartItem>(ShoppingCart);
-            dal.InsertOrderLine(orderID, products);
+            newOrder.ProductsInOrder = new List<ShoppingCartItem>(ShoppingCart);
+            dal.InsertOrderLine(orderID, newOrder.ProductsInOrder);
+
+            // Create Receipt
+            ReceiptBuilder receipt = new ReceiptBuilder(@"..\..\..\Receipts");
+            CustomerOrder justCreated = dal.GetCustomerOrder(orderID);
+            justCreated.order.ProductsInOrder = newOrder.ProductsInOrder;
+            receipt.CreateReceipt(justCreated);
         }
 
         //------------------------------------------ ORDER LOOKUP STUFF--------------------------------------------//

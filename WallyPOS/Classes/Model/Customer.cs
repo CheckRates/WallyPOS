@@ -13,7 +13,7 @@ namespace WallyPOS.Classes.Model
         public string LastName { get; set; }
         public string PhoneNum { get; set; }
 
-
+        public string FullName { get; }
         //----------METHODS----------//
         /// <summary>
         /// Default constructor for the Customer Class
@@ -31,6 +31,7 @@ namespace WallyPOS.Classes.Model
         {
             FirstName = firstName;
             LastName = lastName;
+            FullName = FirstName + " " + LastName;
             PhoneNum = phoneNum;
         }
     }

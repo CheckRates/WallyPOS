@@ -29,8 +29,7 @@ namespace WallyPOS
             // Clear Error message
             ErrorMessage.Visibility = Visibility.Hidden;
 
-            // Grab Parameters
-            Item selectedProduct = (ShoppingCartItem)OrderProducts.SelectedItem;
+            ShoppingCartItem selectedProduct = (ShoppingCartItem)OrderProducts.SelectedItem;
             int quantity = 0;
 
             if (onlyNumbers.IsMatch(RefundQuantity.Text))
@@ -56,7 +55,8 @@ namespace WallyPOS
 
             // Send to ViewModel layer and add product to cart
             var tempVM = (ProductsOrderVM)this.DataContext;
-            tempVM.RefundItem(selectedProduct.ItemId, quantity);
+            tempVM.RefundItem(selectedProduct, quantity);
+            OrderProducts.Items.Refresh();
 
             // Clean UI
             RefundQuantity.Text = "";
