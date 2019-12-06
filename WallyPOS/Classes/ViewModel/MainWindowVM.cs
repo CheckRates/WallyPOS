@@ -134,8 +134,9 @@ namespace WallyPOS.Classes.ViewModel
             justCreated.order.ProductsInOrder = newOrder.ProductsInOrder;
             receipt.CreateReceipt(justCreated);
 
-            // Clear Shopping Cart
+            // Clear Shopping Cart and refesh product table
             ShoppingCart.Clear();
+            FilterProducts("");
             return true;
         }
 

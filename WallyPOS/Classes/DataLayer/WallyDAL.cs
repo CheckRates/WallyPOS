@@ -184,6 +184,8 @@ namespace WallyPOS.Classes.DataLayer
         {
             using (var myConn = new MySqlConnection(connectionString))
             {
+                myConn.Open();
+
                 foreach (var product in shoppingCart)
                 {
                     const string sqlStatement = @"  INSERT INTO orderline (OrderId, ItemId, Quantity)
@@ -198,7 +200,6 @@ namespace WallyPOS.Classes.DataLayer
                     myCommand.Parameters.AddWithValue("@ITEMID", product.ItemId);
                     myCommand.Parameters.AddWithValue("@QUANTITY", product.quantity);
 
-                    myConn.Open();
                     myCommand.ExecuteNonQuery();
                 }
             }

@@ -67,7 +67,7 @@ namespace WallyPOS
                 SetErrorMessage("Please select an item to add to the cart!");
                 return;
             }
-            else if(quantity < 0)
+            else if(quantity <= 0)
             {
                 SetErrorMessage("Product quantity needs to be higher than zero!");
                 return;
