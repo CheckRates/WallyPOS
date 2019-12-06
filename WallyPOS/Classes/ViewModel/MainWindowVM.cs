@@ -25,6 +25,18 @@ namespace WallyPOS.Classes.ViewModel
             }
         }
 
+        private ObservableCollection<CustomerOrder> _filteredOrders;
+        public ObservableCollection<CustomerOrder> FilteredOrders
+        {
+            get { return _filteredOrders; }
+            set
+            {
+                _filteredOrders = value;
+                OnPropertyChanged("FilteredOrders");
+            }
+        }
+
+
         //----------METHODS----------//
         public MainWindowVM()
         { 
@@ -33,6 +45,7 @@ namespace WallyPOS.Classes.ViewModel
             PossibleBranches = new ObservableCollection<Branch>(dal.GetBranches());
             Products = new ObservableCollection<Item>(dal.GetProductsByName(""));
             _shoppingCart = new ObservableCollection<ShoppingCartItem>();
+            FilteredOrders = new ObservableCollection<CustomerOrder>();
         }
 
         public bool AddProductToCart(Item selectedProduct, int quantity)
@@ -96,6 +109,13 @@ namespace WallyPOS.Classes.ViewModel
             // Associate Order with Product with OrderLInes
             var products = new List<ShoppingCartItem>(ShoppingCart);
             dal.InsertOrderLine(orderID, products);
+        }
+
+        //------------------------------------------ ORDER LOOKUP STUFF--------------------------------------------//
+        public void FilterCustomersOrder(string firstName, string lastName, string phoneNum, string branchName)
+        {
+            WallyDAL dal = new WallyDAL();
+            FilteredOrders = new ObservableCollection<CustomerOrder>(dal.GetOrders(firstName, lastName, phoneNum, branchName));
         }
 
         // Handlers

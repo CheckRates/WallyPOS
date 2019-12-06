@@ -26,6 +26,9 @@ namespace WallyPOS.Classes.Model
             this.quantity = quantity;
         }
 
+        public ShoppingCartItem()
+        { }
+
         public bool AddToQuantity(int more)
         {
             bool wasItAdded = false;

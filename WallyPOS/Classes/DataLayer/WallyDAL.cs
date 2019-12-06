@@ -203,6 +203,39 @@ namespace WallyPOS.Classes.DataLayer
                 }
             }
         }
+        public List<CustomerOrder> GetOrders(string firstName, string lastName, string phoneNumber, string branchName)
+        {
+            const string sqlStatement = @" SELECT * 
+                                           FROM CustomerOrder
+                                                   WHERE
+		                                           (FirstName LIKE CONCAT(@FNAME, '%') OR @FNAME= '') AND
+                                                   (LastName LIKE CONCAT(@LNAME, '%') OR @LNAME  = '') AND  
+                                                   (PhoneNum LIKE CONCAT(@PNUMBER, '%') OR @PNUMBER = '') AND
+                                                   (BranchName LIKE CONCAT(@BRANCHNAME, '%') OR @BRANCHNAME = ''); ";
+
+            using (var myConn = new MySqlConnection(connectionString))
+            {
+                var myCommand = new MySqlCommand(sqlStatement, myConn);
+                myCommand.Parameters.AddWithValue("@FNAME", firstName);
+                myCommand.Parameters.AddWithValue("@LNAME", lastName);
+                myCommand.Parameters.AddWithValue("@PNUMBER", phoneNumber);
+                myCommand.Parameters.AddWithValue("@BRANCHNAME", branchName);
+
+
+                //For offline connection we will use  MySqlDataAdapter class.  
+                var myAdapter = new MySqlDataAdapter
+                {
+                    SelectCommand = myCommand
+                };
+
+                var dataTable = new DataTable();
+                myAdapter.Fill(dataTable);
+
+                var filteredCustomersOrders = DataTableToCustomerOrderList(dataTable);
+
+                return filteredCustomersOrders;
+            }
+        }
 
         //---------> Data Conversions
         /// <summary>
@@ -225,7 +258,7 @@ namespace WallyPOS.Classes.DataLayer
                     ItemDescp = row["ItemDescp"].ToString(),
                     Colour = row["Colour"].ToString(),
                     Size = row["Size"].ToString(),
-                    Pattern = row["Pattern"].ToString(),
+                    Pattern = row["Pattern"].ToString(), 
                     ItemType = row["ITemType"].ToString()
                 });
             }
@@ -276,6 +309,26 @@ namespace WallyPOS.Classes.DataLayer
             }
 
             return customers;
+        }
+
+        private List<CustomerOrder> DataTableToCustomerOrderList(DataTable table)
+        {
+            var productsList = new List<CustomerOrder>();
+
+            foreach (DataRow row in table.Rows)
+            {
+                CustomerOrder newCustomerOrder = new CustomerOrder();
+                newCustomerOrder.order.OrderId = Convert.ToInt32(row["OrderId"]);
+                newCustomerOrder.customer.FirstName = row["FirstName"].ToString();
+                newCustomerOrder.customer.LastName = row["LastName"].ToString();
+                newCustomerOrder.customer.PhoneNum = row["PhoneNum"].ToString();
+                newCustomerOrder.branch.BranchName = row["BranchName"].ToString();
+                newCustomerOrder.order.OrderDate = Convert.ToDateTime(row["OrderDate"]);
+
+                productsList.Add(newCustomerOrder);
+            }
+
+            return productsList;
         }
 
     }

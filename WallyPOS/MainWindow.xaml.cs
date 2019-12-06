@@ -12,8 +12,7 @@ namespace WallyPOS
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
-    {
-    
+    {   
         private static readonly Regex onlyNumbers = new Regex("^[0-9]*$");
         public static Customer foundCustomer { get; set; }
 
@@ -22,6 +21,9 @@ namespace WallyPOS
             // Initialize and assign MainWindow ViewModel
             InitializeComponent();
             DataContext = new MainWindowVM();
+
+            var tempVM = (MainWindowVM)this.DataContext;
+            tempVM.FilterCustomersOrder("", "", "", "");
         }
 
         private void CustomerLookUp_Click(object sender, RoutedEventArgs e)
@@ -116,7 +118,12 @@ namespace WallyPOS
             tempVM.CreateNewOrder(foundCustomer, selectedBranch);
         }
 
-        private void OrderLookup_Click(object sender, RoutedEventArgs e)
+        private void ApplyFilters_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void CustomerOrder_DoubleClick(object sender, RoutedEventArgs e)
         {
 
         }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace WallyPOS.Classes.Model
 {
@@ -10,6 +11,7 @@ namespace WallyPOS.Classes.Model
         public int BranchId { get; set; }
         public DateTime OrderDate { get; set; }
         public bool PaymentAuthStatus { get; set; }
+        public List<ShoppingCartItem> OrderProducts { get; set; } 
 
         //----------METHODS----------//
         public Order(int customerId, int branchId)
@@ -17,6 +19,10 @@ namespace WallyPOS.Classes.Model
             CustomerId = customerId;
             BranchId = branchId;
             OrderDate = DateTime.Now;
+            OrderProducts = null;
         }
+
+        public Order()
+        { }
     }
 }

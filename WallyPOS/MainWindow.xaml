@@ -10,9 +10,25 @@
         <TabControl TabStripPlacement="Top">
             <TabItem Header="New Order">
                 <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.5*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="30"/>
+                        <ColumnDefinition Width="1.5*"/>
+                        <ColumnDefinition Width="20"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="0.75*"/>
+                        <RowDefinition Height="0.75*"/>
+                        <RowDefinition Height="3.75*" />
+                        <RowDefinition Height="0.5*"/>
+                    </Grid.RowDefinitions>
+
+
                     <!--Branches Stuff -->
-                    <Label Content="Branch:"   HorizontalAlignment="Left" VerticalAlignment="Top" Width="70" Height="26" Grid.Column="1" Margin="1,10,0,0"/>
-                    <ComboBox Name="BranchSelection" ItemsSource="{Binding PossibleBranches}" HorizontalAlignment="Left" Margin="76,16,0,0" VerticalAlignment="Top" Width="120" Height="20" Grid.Column="1">
+                    <Label Content="Branch:"   HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                    <ComboBox Name="BranchSelection" ItemsSource="{Binding PossibleBranches}" HorizontalAlignment="Left" VerticalAlignment="Top" MinWidth="120" Grid.Column="1"  Margin="0,3.5,0,0">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding BranchName}" />
@@ -21,28 +37,28 @@
                     </ComboBox>
 
                     <!--Customer Stuff -->
-                    <Label Content="Customer:" HorizontalAlignment="Left" VerticalAlignment="Top" Width="70" Margin="1,36,0,0" Height="26" Grid.Column="1"/>
-                    <Button Name="LookUpButton" Content="Create / Look Up" HorizontalAlignment="Left" Margin="76,42,0,0" VerticalAlignment="Top" Width="120" Click="CustomerLookUp_Click" Height="20" Grid.Column="1"/>
+                    <Label Content="Customer:" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
+                    <Button Name="LookUpButton" Content="Create / Look Up" Click="CustomerLookUp_Click" HorizontalAlignment="Left" VerticalAlignment="Bottom" MinWidth="120" Grid.Column="1" />
 
                     <!--Products Stuff -->
-                    <Label Content="Products" FontWeight="DemiBold" Foreground="Blue" FontStyle="Italic" HorizontalAlignment="Left" Margin="11,73,0,0" VerticalAlignment="Top" Height="26" Width="57"/>
-                    <Label Content="Search" HorizontalAlignment="Left" Margin="11,97,0,0" VerticalAlignment="Top" Width="60" Height="26"/>
-                    <TextBox HorizontalAlignment="Left" Height="23" Margin="76,100,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="426"/>
+                    <Label Content="Products" FontWeight="DemiBold" Foreground="Blue" FontStyle="Italic" HorizontalAlignment="Left"  VerticalAlignment="Top" MinHeight="25" Grid.Row="1"/>
+                    <Label Content="Search :" HorizontalAlignment="Left" VerticalAlignment="Bottom"  Grid.Row="1"/>
+                    <TextBox HorizontalAlignment="Left" VerticalAlignment="Bottom" TextWrapping="NoWrap" Grid.ColumnSpan="2"  Grid.Row="1" Grid.Column="1" MinWidth="350" Margin="0,0,0,3.5"/>
                     <DataGrid Name="ProductsList" ItemsSource="{ Binding Products }" IsReadOnly="true" 
-                              HorizontalAlignment="Left" Height="210" Margin="10,128,0,0" VerticalAlignment="Top" Width="492"/>
+                              Background="LightGray" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3"/>
 
                     <!--Error Message-->
-                    <Label Name="ErrorMessage" Foreground="White" Background="Red" Visibility="Hidden" HorizontalAlignment="Left"  VerticalAlignment="Top" Margin="410,16,0,0"/>
+                    <Label Name="ErrorMessage" Foreground="White" Background="Red" Visibility="Hidden" HorizontalAlignment="Right"  VerticalAlignment="Bottom"  Grid.Column="2"/>
 
                     <!--Add to Cart-->
-                    <Label Content="Quantity :" FontWeight="Bold" HorizontalAlignment="Left" Margin="131,342,0,0" VerticalAlignment="Top" Height="38"/>
-                    <TextBox Name="AddQuantity" HorizontalAlignment="Right" Height="20" Margin="0,346,530,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" RenderTransformOrigin="0.333,-0.13" />
-                    <Button Content="Add to Cart" Click="CartAddOrder_Click" HorizontalAlignment="Left" Margin="289,346,0,0" VerticalAlignment="Top" Width="75" Height="20" RenderTransformOrigin="0.2,0.55"/>
+                    <Label Content="Quantity :" FontWeight="Bold" HorizontalAlignment="Right" VerticalAlignment="Top"  Grid.Row="4"/>
+                    <TextBox Name="AddQuantity" HorizontalAlignment="Left" VerticalAlignment="Top" Height="20" TextWrapping="NoWrap" MinWidth="60" Grid.Row="3" Grid.Column="1" Margin="0,3.5,0,0" />
+                    <Button Content="Add to Cart" Click="CartAddOrder_Click" HorizontalAlignment="Left"  VerticalAlignment="Top" Width="105" MinHeight="20"  Grid.Row="3"  Grid.Column="2" Margin="0,3.5,0,0"/>
 
                     <!--Shopping Cart Stuff-->
-                    <Label Content="Shopping Cart" FontWeight="DemiBold" Foreground="Blue" FontStyle="Italic" HorizontalAlignment="Left" Margin="30,73,-1,0" VerticalAlignment="Top" Grid.Column="2" Height="26" Width="0"/>
-                    <Button Content="Create Order" HorizontalAlignment="Left" Margin="644,15,0,0" VerticalAlignment="Top" Width="98" Height="32" Click="CreateOrder_Click"/>
-                    <ListView Name="CartList" ItemsSource="{ Binding ShoppingCart }" HorizontalAlignment="Left" Height="210" Margin="553,128,0,0" VerticalAlignment="Top" Width="189">
+                    <Label Content="Shopping Cart" FontWeight="DemiBold" Foreground="Blue" FontStyle="Italic" HorizontalAlignment="Left" Margin="30,73,0,0" VerticalAlignment="Top" Height="26" Width="0"/>
+                    <Button Content="Create Order" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="100" Height="30" Click="CreateOrder_Click" Grid.Column="4" />
+                    <ListView Name="CartList" ItemsSource="{ Binding ShoppingCart }"  Grid.Column="4" Grid.Row="2">
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <WrapPanel>
@@ -55,15 +71,67 @@
                     </ListView>
 
                     <!--Remove from Shopping Cart-->
-                    <Button Content="Remove" Click="CartRemove_Click" HorizontalAlignment="Left" Margin="667,345,0,0" VerticalAlignment="Top" Width="75" Height="20"/>
+                    <Button Content="Remove" Click="CartRemove_Click" HorizontalAlignment="Left" VerticalAlignment="Top"  Width="105" MinHeight="20" Grid.Column="4" Grid.Row="3" Margin="0,3.5,0,0"/>
                 </Grid>
             </TabItem>
-            <TabItem  Name="OrderLookup">
-                <TabItem.Header>
-                    <Label Content="Order Lookup" 
-                    MouseLeftButtonDown="OrderLookup_Click" 
-                    HorizontalAlignment="Stretch"/>
-                </TabItem.Header>
+
+
+            <TabItem Header="Order Lookup">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="20"/>
+
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="0.3*"/>
+                        <RowDefinition Height="0.3*"/>
+                        <RowDefinition Height="20"/>
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition Height="20"/>
+                    </Grid.RowDefinitions>
+                    
+                    <!--Filters-->
+                    <Label Content="Filters" FontWeight="DemiBold" Foreground="Blue" FontStyle="Italic" Grid.Row="1" Grid.Column="1"/>
+
+                    <Label Content="First Name: " Grid.Column="1" Grid.Row="1" VerticalAlignment="Bottom"  />
+                    <TextBox Name="FirstNameFilter" TextWrapping="NoWrap"  Grid.Column="1" Grid.Row="1" Width="100" MaxHeight="20" VerticalAlignment="Bottom" HorizontalAlignment="Right" />
+
+                    <Label Content="Last Name:" Grid.Column="2" Grid.Row="1" VerticalAlignment="Bottom" />
+                    <TextBox Name="LastNameFilter"  TextWrapping="NoWrap"  Grid.Column="2" Grid.Row="1" Width="100" MaxHeight="20" VerticalAlignment="Bottom" HorizontalAlignment="Right"/>
+
+                    <Label Content="Phone :" Grid.Column="3" Grid.Row="1" VerticalAlignment="Bottom"/>
+                    <TextBox Name="PhoneNumFilter"  TextWrapping="NoWrap"  Grid.Column="3" Grid.Row="1" Width="100" MaxHeight="20" VerticalAlignment="Bottom" HorizontalAlignment="Right"/>
+
+                    <Label Content="Branch:" Grid.Column="4" Grid.Row="1"  VerticalAlignment="Bottom"/>
+                    <TextBox Name="BranchFilter" TextWrapping="NoWrap" Grid.Row="1" Grid.Column="4" Width="100" MaxHeight="20" VerticalAlignment="Bottom" HorizontalAlignment="Right"/>
+
+                    <!--Order Search-->
+                    <Label Content="Order ID:" Grid.Column="1"  VerticalAlignment="Bottom"/>
+                    <TextBox Name="InOrderId"  TextWrapping="NoWrap"  Grid.Column="1" Width="100" MaxHeight="20" VerticalAlignment="Bottom" HorizontalAlignment="Right"/>
+
+                    <Button Content="Search" Click="ApplyFilters_Click" Grid.Column="4"  VerticalAlignment="Bottom"/>
+
+                    <!--Data Grid-->
+                    <DataGrid Name="FoundCustomers"  
+                              ItemsSource="{ Binding FilteredOrders }" 
+                              IsReadOnly="True" SelectionMode="Single" MouseDoubleClick="CustomerOrder_DoubleClick"
+                              Background="LightGray" AutoGenerateColumns="False"
+                              Grid.Row="3" Grid.Column="1" Grid.RowSpan="2" Grid.ColumnSpan="4">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Order ID" Binding="{Binding order.OrderId}" />
+                            <DataGridTextColumn Header="First Name" Binding="{Binding customer.FirstName}" />
+                            <DataGridTextColumn Header="Last Name" Binding="{Binding customer.LastName}" />
+                            <DataGridTextColumn Header="Phone #" Binding="{Binding customer.PhoneNum}" />
+                            <DataGridTextColumn Header="Date" Binding="{Binding order.OrderDate}" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
             </TabItem>
         </TabControl>
     </Grid>
