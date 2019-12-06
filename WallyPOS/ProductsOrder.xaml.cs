@@ -32,7 +32,7 @@ namespace WallyPOS
             ShoppingCartItem selectedProduct = (ShoppingCartItem)OrderProducts.SelectedItem;
             int quantity = 0;
 
-            if (onlyNumbers.IsMatch(RefundQuantity.Text))
+            if (onlyNumbers.IsMatch(RefundQuantity.Text) && RefundQuantity.Text.ToString() != "")
             {
                 quantity = Convert.ToInt32(RefundQuantity.Text);
             }

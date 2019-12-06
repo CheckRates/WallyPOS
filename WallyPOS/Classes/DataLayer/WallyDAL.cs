@@ -87,7 +87,7 @@ namespace WallyPOS.Classes.DataLayer
         /// <summary>
         /// Inserts a new customer into the database
         /// </summary>
-        /// <param name="newCustomer" <b>Customer</b> - Object representing the customer that will be added to the database></param>
+        /// <param name="newCustomer"> <b>Customer</b> - Object representing the customer that will be added to the database></param>
         public void CreateCustomer(Customer newCustomer)
         {
             // Convert phone Number into correct format
@@ -112,8 +112,8 @@ namespace WallyPOS.Classes.DataLayer
         /// <summary>
         /// Access the database to get a List of all Products that meet criterias set in the parameters
         /// </summary>
-        /// <param name="productName" <b>string</b> - product name string></param>
-        /// <returns></returns>
+        /// <param name="productName"> <b>string</b> - product name string></param>
+        /// <returns> Returns a List of Items that meetthe filtering criteria</returns>
         public List<Item> GetProductsByName(string productName)
         {
             const string sqlStatement = @"SELECT * 
@@ -141,6 +141,11 @@ namespace WallyPOS.Classes.DataLayer
             }
         }
 
+        /// <summary>
+        /// Inserts an new order into Wally's Database
+        /// </summary>
+        /// <param name="order"> <b>Order</b> - Order object that will be inserted into the database></param>
+        /// <returns> Returns the order id of the newly inserted order</returns>
         public int CreateNewOrder(Order order)
         {
             using (var myConn = new MySqlConnection(connectionString))
@@ -160,10 +165,14 @@ namespace WallyPOS.Classes.DataLayer
                 myCommand.ExecuteNonQuery();
             }
 
-            return GetLastOrder();
+            return GetLastPrimaryKey();
         }
 
-        public int GetLastOrder()
+        /// <summary>
+        /// Gets the last inserted primary key 
+        /// </summary>
+        /// <returns> Returns the last inserted primary key</returns>
+        public int GetLastPrimaryKey()
         {
             Int32 lastOrderId = -1;
 
@@ -180,6 +189,11 @@ namespace WallyPOS.Classes.DataLayer
             return lastOrderId;
         }
 
+        /// <summary>
+        /// Connects the order to products by inserting the orderline associative entity
+        /// </summary>
+        /// <param name="orderId"> <b>int</b> - Order primary key that the products will be connected to ></param>
+        /// <param name="shoppingCart"> <b>List<ShoppingCartItem></b> - All the products from a particular order ></param>
         public void InsertOrderLine(int orderId, List<ShoppingCartItem> shoppingCart)
         {
             using (var myConn = new MySqlConnection(connectionString))
@@ -204,6 +218,15 @@ namespace WallyPOS.Classes.DataLayer
                 }
             }
         }
+
+        /// <summary>
+        /// Gets all the Orders and their related customer that meet the criteria of the filters 
+        /// </summary>
+        /// <param name="firstName"> <b>string</b> - First Name field filter criteria</param>
+        /// <param name="lastName">  <b>string</b> - Last Name field filter criteria</param>
+        /// <param name="phoneNumber"> <b>string</b> - Phone Number field filter criteria</param>
+        /// <param name="branchName">  <b>string</b> - Branch Name field filter criteria</param>
+        /// <returns></returns>
         public List<CustomerOrder> GetOrders(string firstName, string lastName, string phoneNumber, string branchName)
         {
             const string sqlStatement = @" SELECT * 
@@ -238,6 +261,11 @@ namespace WallyPOS.Classes.DataLayer
             }
         }
 
+        /// <summary>
+        /// Gets a single order with the related customer by searching by the primary key
+        /// </summary>
+        /// <param name="orderId"> <b>int</b> - Order primary key that will be searched </param>
+        /// <returns> Returns one instance </returns>
         public CustomerOrder GetCustomerOrder(int orderId)
         {
             const string sqlStatement = @" SELECT * 
