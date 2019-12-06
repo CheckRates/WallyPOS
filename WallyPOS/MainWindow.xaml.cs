@@ -39,7 +39,7 @@ namespace WallyPOS
             LookUpButton.Content = "Create / Look Up";
             if (foundCustomer != null)
             {
-                LookUpButton.Content = foundCustomer.FirstName + " " + foundCustomer.LastName;
+                LookUpButton.Content = foundCustomer.FullName;
             }    
         }
 
@@ -52,7 +52,7 @@ namespace WallyPOS
             Item selectedProduct = (Item)ProductsList.SelectedItem;
             int quantity = 0;
 
-            if (onlyNumbers.IsMatch(AddQuantity.Text))
+            if (onlyNumbers.IsMatch(AddQuantity.Text) && AddQuantity.Text.ToString() != "")
             {
                 quantity = Convert.ToInt32(AddQuantity.Text);
             }

@@ -131,6 +131,7 @@
                             <DataGridTextColumn Header="Last Name" Binding="{Binding customer.LastName}" />
                             <DataGridTextColumn Header="Phone #" Binding="{Binding customer.PhoneNum}" />
                             <DataGridTextColumn Header="Date" Binding="{Binding order.OrderDate}" />
+                            <DataGridTextColumn Header="Refund" Binding="{Binding order.PaymentAuthStatus}"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>

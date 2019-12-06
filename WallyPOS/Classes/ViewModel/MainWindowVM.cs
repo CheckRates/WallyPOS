@@ -135,7 +135,7 @@ namespace WallyPOS.Classes.ViewModel
             receipt.CreateReceipt(justCreated);
 
             // Clear Shopping Cart
-            ShoppingCart = null;
+            ShoppingCart.Clear();
             return true;
         }
 

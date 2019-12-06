@@ -91,7 +91,7 @@ namespace WallyPOS.Classes.DataLayer
         public void CreateCustomer(Customer newCustomer)
         {
             // Convert phone Number into correct format
-            string.Format("###-###-####", newCustomer.PhoneNum);
+            newCustomer.PhoneNum = string.Format("{0:###-###-####}", Convert.ToInt64(newCustomer.PhoneNum));
 
             using (var myConn = new MySqlConnection(connectionString))
             {
@@ -301,7 +301,7 @@ namespace WallyPOS.Classes.DataLayer
                                             WHERE OrderId = @ORDERID AND ItemId = @ITEMID;
                                             UPDATE invoice
                                             SET
-                                            PaymentAuthStatus = false;
+                                            PaymentAuthStatus = false
                                             WHERE OrderID = @ORDERID;
                                             UPDATE item
                                             SET
@@ -408,6 +408,7 @@ namespace WallyPOS.Classes.DataLayer
                 newCustomerOrder.customer.PhoneNum = row["PhoneNum"].ToString();
                 newCustomerOrder.branch.BranchName = row["BranchName"].ToString();
                 newCustomerOrder.order.OrderDate = Convert.ToDateTime(row["OrderDate"]);
+                newCustomerOrder.order.PaymentAuthStatus = Convert.ToBoolean(row["PaymentAuthStatus"]);
 
                 productsList.Add(newCustomerOrder);
             }

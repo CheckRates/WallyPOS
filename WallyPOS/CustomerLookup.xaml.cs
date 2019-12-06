@@ -3,7 +3,7 @@ using WallyPOS.Classes.Model;
 using System.Windows;
 using System.Windows.Controls;
 using System.Collections.Generic;
-
+using System.Windows.Media;
 
 namespace WallyPOS
 {
@@ -21,17 +21,6 @@ namespace WallyPOS
             tempVM.FilterCustomers("", "", ""); 
         }
 
-        private void CustomerFilters_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            // Get filters from textboxes 
-            string firstName= FirstNameFilter.Text.ToString();
-            string lastName = LastNameFilter.Text.ToString();
-            string phoneNum = PhoneNumFilter.Text.ToString();
-
-            // Access ViewModel
-            var tempVM = (CustomerLookupVM)this.DataContext;
-            tempVM.FilterCustomers(firstName, lastName, phoneNum);
-        }
 
         private void CreateCustomer_Click(object sender, RoutedEventArgs e)
         {
@@ -67,23 +56,42 @@ namespace WallyPOS
             var tempVM = (CustomerLookupVM)this.DataContext;
             tempVM.CreateCustomer(firstName, lastName, phoneNum);
 
+            SetErrorMessage("Customer Created!", true);
+
             // Clear Text fields
             InFistName.Text = "";
             InLastName.Text = "";
             InPhoneNum.Text = "";
         }
 
-        private void Refresh_Click(object sender, RoutedEventArgs e)
+        private void CustomerFilters_Click(object sender, RoutedEventArgs e)
         {
-            // Refresh UI
+            // Get filters from textboxes 
+            string firstName = FirstNameFilter.Text.ToString();
+            string lastName = LastNameFilter.Text.ToString();
+            string phoneNum = PhoneNumFilter.Text.ToString();
+
+            // Access ViewModel
             var tempVM = (CustomerLookupVM)this.DataContext;
-            tempVM.FilterCustomers("", "", "");
+            tempVM.FilterCustomers(firstName, lastName, phoneNum);
         }
 
         private void Select_Click(object sender, RoutedEventArgs e)
         {
             MainWindow.foundCustomer = (Customer)FoundCustomers.SelectedItem;
             this.Close();
+        }
+
+        private void SetErrorMessage(string message, bool success = false)
+        {
+            ErrorMessage.Visibility = Visibility.Visible;
+            ErrorMessage.Background = new SolidColorBrush(Colors.Red);
+            if (success == true)
+            {
+                // Set the colour to Red if success...haha get it? (explanation: im colorblind)
+                ErrorMessage.Background = new SolidColorBrush(Colors.Green);
+            }
+            ErrorMessage.Content = message;
         }
     }
 }
