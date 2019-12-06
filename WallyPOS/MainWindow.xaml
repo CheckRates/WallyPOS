@@ -85,7 +85,6 @@
                         <ColumnDefinition />
                         <ColumnDefinition />
                         <ColumnDefinition Width="20"/>
-
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="0.3*"/>
@@ -118,7 +117,7 @@
                     <Button Content="Search" Click="ApplyFilters_Click" Grid.Column="4"  VerticalAlignment="Bottom"/>
 
                     <!--Data Grid-->
-                    <DataGrid Name="FoundCustomers"  
+                    <DataGrid Name="Orders"  
                               ItemsSource="{ Binding FilteredOrders }" 
                               IsReadOnly="True" SelectionMode="Single" MouseDoubleClick="CustomerOrder_DoubleClick"
                               Background="LightGray" AutoGenerateColumns="False"

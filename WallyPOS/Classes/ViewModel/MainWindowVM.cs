@@ -118,6 +118,12 @@ namespace WallyPOS.Classes.ViewModel
             FilteredOrders = new ObservableCollection<CustomerOrder>(dal.GetOrders(firstName, lastName, phoneNum, branchName));
         }
 
+        public void GetProductsFromOrder(int orderId)
+        {
+            WallyDAL dal = new WallyDAL();
+
+        }
+
         // Handlers
         private void OnPropertyChanged(string propertyName)
         {

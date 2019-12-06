@@ -125,7 +125,14 @@ namespace WallyPOS
 
         private void CustomerOrder_DoubleClick(object sender, RoutedEventArgs e)
         {
+            // Get Selected Order
+            var selectedOrder = (CustomerOrder)Orders.SelectedItem;
+            int orderId = selectedOrder.order.OrderId;
 
+            // Start new window
+            Window productsOrder = new ProductsOrder(orderId);
+            productsOrder.Owner = this;
+            productsOrder.ShowDialog();
         }
     }
 }

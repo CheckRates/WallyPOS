@@ -111,6 +111,7 @@
     <Compile Include="Classes\Model\ShoppingCartItem.cs" />
     <Compile Include="Classes\ViewModel\CustomerLookupVM.cs" />
     <Compile Include="Classes\ViewModel\MainWindowVM.cs" />
+    <Compile Include="Classes\ViewModel\ProductsOrderVM.cs" />
     <Compile Include="CustomerLookup.xaml.cs">
       <DependentUpon>CustomerLookup.xaml</DependentUpon>
     </Compile>
@@ -122,10 +123,17 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="ProductsOrder.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="OrderLookup.xaml.cs">
       <DependentUpon>OrderLookup.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ProductsOrder.xaml.cs">
+      <DependentUpon>ProductsOrder.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

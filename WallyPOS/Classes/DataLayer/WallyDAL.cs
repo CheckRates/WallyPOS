@@ -237,6 +237,60 @@ namespace WallyPOS.Classes.DataLayer
             }
         }
 
+        public List<ShoppingCartItem> GetProductsFromOrder(int orderId)
+        {
+            const string sqlStatement = @" SELECT ol.ItemId, ItemName, Quantity  
+                                           FROM invoice AS o
+	                                            INNER JOIN orderline AS ol ON o.OrderId = ol.OrderId
+                                                INNER JOIN item AS p ON ol.ItemId = p.ItemId
+                                                WHERE o.OrderId = @ORDERID;";
+
+
+            using (var myConn = new MySqlConnection(connectionString))
+            {
+                var myCommand = new MySqlCommand(sqlStatement, myConn);
+                myCommand.Parameters.AddWithValue("@ORDERID", orderId);
+
+                //For offline connection we will use  MySqlDataAdapter class.  
+                var myAdapter = new MySqlDataAdapter
+                {
+                    SelectCommand = myCommand
+                };
+
+                var dataTable = new DataTable();
+                myAdapter.Fill(dataTable);
+
+                var orderProducts = DataTableToCartItemsList(dataTable);
+
+                return orderProducts;
+            }
+        }
+
+        public void UpdateProductStock(int refundItemId,int newStockAmount)
+        {
+            const string sqlStatement = @"  SELECT *
+                                            FROM Branch                                             
+                                            ORDER BY BranchName";
+
+            using (var myConn = new MySqlConnection(connectionString))
+            {
+                var myCommand = new MySqlCommand(sqlStatement, myConn);
+
+                //For offline connection we will use  MySqlDataAdapter class.  
+                var myAdapter = new MySqlDataAdapter
+                {
+                    SelectCommand = myCommand
+                };
+
+                var dataTable = new DataTable();
+                myAdapter.Fill(dataTable);
+
+                var branches = DataTableToBranchList(dataTable);
+
+                return branches;
+            }
+        }
+
         //---------> Data Conversions
         /// <summary>
         /// Converts a the resulted datatable of a query to a List object with the proper data conversions 
@@ -331,5 +385,21 @@ namespace WallyPOS.Classes.DataLayer
             return productsList;
         }
 
+        private List<ShoppingCartItem> DataTableToCartItemsList(DataTable table)
+        {
+            var cartItems = new List<ShoppingCartItem>();
+
+            foreach (DataRow row in table.Rows)
+            {
+                cartItems.Add(new ShoppingCartItem
+                {
+                    ItemId = Convert.ToInt32(row["ItemId"]),
+                    ItemName = row["ItemName"].ToString(),
+                    quantity = Convert.ToInt32(row["Quantity"])
+                });
+            }
+
+            return cartItems;
+        }
     }
 }
